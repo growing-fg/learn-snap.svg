@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Learn Snap.svg</title>
+
+    <script src="snap.svg.js"></script>
+</head>
+
+<body>
+
+    <svg id="svg" style="width: 300px; height: 300px;"></svg>
+    <script>
+        // Snap('#someid') 指定使用的emelment。
+        // 如果不指定element则其会自动创建一个，可指定自动创建的宽高 Snap(800, 600)
+        var s = Snap('#svg');
+
+        // 创建一个圆
+        var bigCircle = s.circle(150, 150, 100);
+
+        // 默认为黑色，可用以下方法修改属性
+        bigCircle.attr({
+            fill: "#bada55",
+            stroke: "#000",
+            strokeWidth: 5
+        });
+
+        // 创建另一个圆
+        var smallCircle = s.circle(100, 150, 70);
+
+        // 创建一个组
+        var discs = s.group(smallCircle, s.circle(200, 150, 70));
+
+        // 可以为组指定填充颜色
+        discs.attr({fill: "#fff"});
+
+        // 把组作为大圆的遮罩
+        // 对象在遮罩内的部分根据遮罩的灰度值显示，在遮罩外的部分则不显示
+        bigCircle.attr({mask: discs});
+
+        // 增加一点动画
+        smallCircle.animate({r: 50}, 1000);
+
+        // 可以用select方法选中子元素
+        discs.select("circle:nth-child(2)").animate({r: 50}, 1000);
+
+        // 创建一些pattern
+        var p = s.path("M10-5-10,15M15,0,0,15M0-5-20,15").attr({
+            fill: "none",
+            stroke: "#bada55",
+            strokeWidth: 5
+        });
+        // 创建pattern只需指定dimensions
+        p = p.pattern(0, 0, 10, 10);
+        // 把它作为对象的填充
+        bigCircle.attr({fill: p});
+
+        // We could also grab pattern from SVG
+        // already embedded into our page
+//        discs.attr({
+//            fill: Snap("#pattern")
+//        });
+
+        // 圆形渐变
+        discs.attr({fill: "r()#fff-#000"});
+
+        // Note that you have two gradients for each circle
+        // If we want them to share one gradient,
+        // we need to use absolute gradient with capital R
+        discs.attr({fill: "R(150, 150, 100)#fff-#000"});
+
+        // Of course we could animate color as well
+        p.select("path").animate({stroke: "#f00"}, 1000);
+
+        // Writing text as simple as:
+        s.text(200, 100, "Snap.svg");
+        // Provide an array of strings (or arrays), to generate tspans
+        var t = s.text(200, 120, ["Snap", ".", "svg"]);
+        t.selectAll("tspan:nth-child(3)").attr({
+            fill: "#900",
+            "font-size": "20px"
+        });
+    </script>
+
+</body>
+
+</html>
